@@ -7,7 +7,7 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 	private int _row;
 	private int _seat;
 
-	private Texture2D _currentTex = null;
+	private Sprite[] _sprites = null;
 
 	public void Configure( int row, int seat )
 	{
@@ -21,7 +21,13 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		GameState gameState = app.GameStateManager.GameState;
 		CrowdIndividual model = gameState.m_rows[_row].m_individuals[_seat];
 
-		//UpdateImage( model );
+		_sprites = new Sprite[5];
+		for (int i = 0; i < 5; ++i) 
+		{
+			Rect texRect = new Rect (i*UIManager.CHARACTER_WIDTH, 0, UIManager.CHARACTER_WIDTH, UIManager.CHARACTER_HEIGHT);
+			_sprites[i] = Sprite.Create (model.m_config.m_asset, texRect, Vector2.zero);
+		}
+		_image.sprite = _sprites[2];
 	}
 
 	public void UI( AppManager app )
@@ -34,49 +40,33 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 	public void UpdateImage( CrowdIndividual model )
 	{
-		if( model.m_waveAmount > 0 )
-		{
-			CfgCrowdConfigAnimation anim = model.m_config.m_waving;
-			int frameIdEst = (int)Mathf.Floor( model.m_waveAmount * anim.m_images.Length );
-			int clampedFrameId = Mathf.Clamp( frameIdEst, 0, anim.m_images.Length-1 );
-			AssignTexture( anim.m_images[clampedFrameId] );
+		if( _sprites == null ) return;
 
-		}
-		else
+		switch( model.GetState() )
 		{
-			CfgCrowdConfigAnimation anim = null;
-			switch( model.GetState() )
-			{
-			case CrowdIndividual.State.STATE_SITTING:
-				anim = model.m_config.m_sitting;
-				break;
-			case CrowdIndividual.State.STATE_FLAGGING:
-				anim = model.m_config.m_flagging;
-				break;
-			case CrowdIndividual.State.STATE_STANDING:
-				anim = model.m_config.m_standing;
-				break;
-			}
+		case CrowdIndividual.State.STATE_WAVING:
+			int frameIdEst = (int)Mathf.Floor (model.m_waveAmount * 2);
+			int clampedFrameId = Mathf.Clamp (frameIdEst, 0, 1);
 
-			AssignTexture( CalcFrameTexture( model.m_energy, anim ) );
+			ChangeSprite (clampedFrameId + 3);
+			break;
+		case CrowdIndividual.State.STATE_GREEN:
+			ChangeSprite (2);
+			break;
+		case CrowdIndividual.State.STATE_YELLOW:
+			ChangeSprite (1);
+			break;
+		case CrowdIndividual.State.STATE_RED:
+			ChangeSprite (0);
+			break;
 		}
 	}
 
-	public Texture2D CalcFrameTexture( float energy, CfgCrowdConfigAnimation anim )
+	public void ChangeSprite( int i )
 	{
-		float frameTime = anim.m_framerate * energy;
-		int frameId = (int)Mathf.Abs(Mathf.Floor(frameTime)) % anim.m_images.Length;
-		return anim.m_images[frameId];
-	}
-
-	public void AssignTexture( Texture2D tex )
-	{
-		if( tex != _currentTex )
+		if (_image.sprite != _sprites [i]) 
 		{
-			int frameId = 0;
-			Rect texRect = new Rect(UIManager.CHARACTER_WIDTH*frameId, 0, UIManager.CHARACTER_WIDTH, tex.height);
-			_image.sprite = Sprite.Create( tex, texRect, Vector2.zero );
-			_currentTex = tex;
+			_image.sprite = _sprites [i];
 		}
 	}
 }

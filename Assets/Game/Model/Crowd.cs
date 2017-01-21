@@ -6,9 +6,9 @@ public class CrowdIndividual
 {
 	public enum State
 	{
-		STATE_STANDING=0,
-		STATE_FLAGGING,
-		STATE_SITTING,
+		STATE_RED=0,
+		STATE_YELLOW,
+		STATE_GREEN,
 		STATE_WAVING,
 	}
 
@@ -28,18 +28,18 @@ public class CrowdIndividual
 
 	public void ResetEnergy()
 	{
-		m_energy = m_config.m_boredomDuration + m_config.m_baseBoredomDelay + Random.Range( 0, m_config.m_additionalBoredomRange );
+		m_energy = m_config.m_yellowTime + m_config.m_greenTime + Random.Range( 0, m_config.m_greenTimeExtra );
 	}
 
 	public State GetState()
 	{
 		if( m_waveAmount > 0 ) { return State.STATE_WAVING; }
 
-		if( m_energy < 0 ) { return State.STATE_SITTING; }
+		if( m_energy < 0 ) { return State.STATE_RED; }
 
-		if( m_energy < m_config.m_boredomDuration ) { return State.STATE_FLAGGING; }
+		if( m_energy < m_config.m_yellowTime ) { return State.STATE_YELLOW; }
 
-		return State.STATE_STANDING;
+		return State.STATE_GREEN;
 	}
 }
 

@@ -56,6 +56,11 @@ public class GameStateManager : IManager
 			// update waves!
 			bool levelOver = WaveController.UpdateWaves( _gameState.m_waves, dt );
 			int failures = CrowdController.UpdateCrowd(_gameState.m_rows, _gameState.m_waves, dt);
+
+			if (failures > 0) 
+			{
+				Debug.LogWarning ("Losses: " + failures);
+			}
 		}
 	}
 	public void UpdateFrameLate( float dt )

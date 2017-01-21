@@ -20,7 +20,7 @@ public class CrowdController
 					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta);
 
 					// fail
-					if (prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_SITTING)
+					if (prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED)
 					{
 						result++;
 					}

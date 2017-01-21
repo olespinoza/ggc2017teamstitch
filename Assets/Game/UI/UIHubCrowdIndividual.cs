@@ -73,7 +73,8 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 	{
 		if( tex != _currentTex )
 		{
-			Rect texRect = new Rect(0, 0, tex.width, tex.height);
+			int frameId = 0;
+			Rect texRect = new Rect(UIManager.CHARACTER_WIDTH*frameId, 0, UIManager.CHARACTER_WIDTH, tex.height);
 			_image.sprite = Sprite.Create( tex, texRect, Vector2.zero );
 			_currentTex = tex;
 		}

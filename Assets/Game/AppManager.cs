@@ -15,12 +15,6 @@ public class AppManager : BaseAppManager
 	private GameStateManager _gameStateManager = null;
 	public GameStateManager GameStateManager { get { return _gameStateManager; } }
 
-	private CrowdManager _crowdManager = null;
-	public CrowdManager CrowdManager { get { return _crowdManager; } }
-
-	private CoachManager _coachManager = null;
-	public CoachManager CoachManager { get { return _coachManager; } }
-
 	#region IManager
 
 	public override void Setup( ManagerInitData initData ) 
@@ -30,8 +24,6 @@ public class AppManager : BaseAppManager
 		_uiManager = AddManager<UIManager>( new UIManager.InitData(this) );
 		_progressionManager = AddManager<ProgressionManager>( new ProgressionManager.InitData(this) );
 		_gameStateManager = AddManager<GameStateManager>( new GameStateManager.InitData(this) );
-		_crowdManager = AddManager<CrowdManager>( new CrowdManager.InitData(this) );
-		_coachManager = AddManager<CoachManager>( new CoachManager.InitData(this) );
 
 		_instance = this;
 	}

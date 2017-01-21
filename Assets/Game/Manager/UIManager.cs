@@ -10,6 +10,9 @@ public interface IHub
 
 public class UIManager : IManager
 {
+	public static readonly float STADIUM_WIDTH = 900.0f;
+	public static readonly float CHARACTER_WIDTH = 158.0f;
+
 	private AppManager _app = null;
 	private List<IHub> _globalHubs = null;
 

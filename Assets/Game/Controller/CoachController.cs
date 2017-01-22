@@ -38,6 +38,9 @@ public class CoachController
 				if (cheerEffects.Length > 0) {
 					int effectId = Random.Range (0, cheerEffects.Length);
 					ui.PlayEffect (cheerEffects [effectId]);
+					GameObject coachBubble = GameObject.Find ("CoachBubble") as GameObject;
+					coachBubble.GetComponent<AudioSource> ().Stop ();
+					coachBubble.GetComponent<AudioSource> ().Play ();
 				}
 				coach.m_cheer = coach.m_cfg.m_cheerDuration;
 

@@ -13,10 +13,10 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 
 	public void OnLevelChange( AppManager app )
 	{
-		#if UNITY_WEBGL
-
-		#else
 		_movie = GetComponent<UnityEngine.UI.RawImage>();
+		#if UNITY_WEBGL
+		_movie.enabled = false;
+		#else
 		#endif
 	}
 

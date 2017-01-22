@@ -47,7 +47,7 @@ public class GameStateManager : IManager
 			_gameState.m_levelTime += dt;
 			float newTime = _gameState.m_levelTime;
 
-			CoachController.UpdateCoach( _gameState.m_coach, _gameState.m_rows, dt );
+			CoachController.UpdateCoach( _ui, _gameState.m_coach, _gameState.m_rows, dt );
 
 			CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
 			List<Wave> newWaves = WaveController.GetNewWavesForTimeRange(lcfg, oldTime, newTime);

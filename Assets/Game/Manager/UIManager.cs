@@ -78,4 +78,19 @@ public class UIManager : IManager
 			_globalHubs[i].OnLevelChange(_app);
 		}
 	}
+
+	public void PlayEffect( string effectId )
+	{
+		for (int i = 0; i < _globalHubs.Count; ++i) 
+		{
+			if( _globalHubs[i] is UIHubMovieEffect )
+			{
+				UIHubMovieEffect hme = _globalHubs [i] as UIHubMovieEffect;
+				if (hme.name == effectId)
+				{
+					hme.Play ();
+				}
+			}
+		}
+	}
 }

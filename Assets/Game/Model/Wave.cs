@@ -21,6 +21,7 @@ public class Wave
 
 	public bool Invert { get { return _cfg.m_invert; } }
 	public float Width { get { return _width; } }
+	public float Amplitude { get { return _amplitude; } }
 
 	public Wave( CfgWaveEntry cfg )
 	{

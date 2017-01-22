@@ -6,10 +6,12 @@ public class UIHubIncoming : MonoBehaviour, IHub
 {
 	private UnityEngine.UI.Image _image;
 	[SerializeField] private bool _invert;
+	private AudioSource _audioSource;
 
 	private void Start()
 	{
 		_image = GetComponent<UnityEngine.UI.Image> ();
+		_audioSource = GetComponent<AudioSource> ();
 	}
 
 	public void OnLevelChange( AppManager app )
@@ -53,6 +55,13 @@ public class UIHubIncoming : MonoBehaviour, IHub
 			}
 			bool blink = (Mathf.FloorToInt (Time.time * blinkRate) % 2) == 0;
 			_image.enabled = on && blink;
+
+			if( _audioSource != null )
+			{
+				if( !_image.enabled && _audioSource.isPlaying == true ) _audioSource.Stop ();
+				if( _image.enabled && _audioSource.isPlaying == false )_audioSource.Play ();
+			}
+
 		} 
 		else
 		{

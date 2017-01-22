@@ -13,6 +13,7 @@ public class CfgCrowdRow
 public class CfgLevel
 {
 	public float m_thetaRange;
+	public float m_incomingWarningRange;
 	public int m_coachPositions;
 	public CfgCrowdRow[] m_rows;
 	public string m_coachId;

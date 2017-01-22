@@ -20,7 +20,7 @@ public class CoachController
 
 		if (Input.GetButtonDown ("cheer"))
 		{
-			ui.PlayEffect ("Confetti");
+			ui.PlayEffect ("CoachBubble");
 			coach.m_cheer = CHEER_DURATION;
 		}
 

@@ -19,6 +19,7 @@ public class GameState
 
 	public int m_score = 0;
 	public int m_waveIndex = 0;
+	public int m_waveCount = 0;
 
 	public Coach m_coach = new Coach();
 

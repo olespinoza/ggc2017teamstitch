@@ -138,6 +138,7 @@ public class GameStateManager : IManager
 		_gameState.m_rows = CrowdController.PopulateCrowd(lcfg.m_rows, _prog);
 
 		_gameState.m_waves = WaveController.GetNewWavesForTimeRange(lcfg, -1, 0);
+		_gameState.m_waveCount = lcfg.m_waveEntries.Count;
 		_gameState.m_waveIndex = _gameState.m_waves.Count;
 
 		_ui.OnLevelChange();

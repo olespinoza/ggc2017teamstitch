@@ -15,14 +15,15 @@ public class CrowdController
 				CrowdIndividual individual = row.m_individuals [j];
 				if (individual != null) 
 				{
-
-					float prevAmplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta, true);
-					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta, false);
+					individual.m_failThisFrame = false;
+					float prevAmplitude = WaveController.GetWaveStrengthAt (waves, individual.m_theta, true);
+					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_theta, false);
 
 					// fail
 					if ( prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED )
 					{
 						result++;
+						individual.m_failThisFrame = true;
 					}
 					// start/continue wave
 					else if( individual.GetState() != CrowdIndividual.State.STATE_RED )
@@ -35,6 +36,25 @@ public class CrowdController
 			}
 		}
 		return result;
+	}
+
+	public static void PepUp( List<CrowdRow> rows, float theta, float width )
+	{
+		for (int i = 0; i < rows.Count; ++i)
+		{
+			CrowdRow row = rows [i];
+			for (int j = 0; j < row.m_individuals.Count; ++j)
+			{
+				CrowdIndividual individual = row.m_individuals [j];
+				if (individual != null) 
+				{
+					if (Mathf.Abs (individual.m_theta - theta) < width) 
+					{
+						individual.ResetEnergy ();
+					}
+				}
+			}
+		}
 	}
 
 	public static List<CrowdRow> PopulateCrowd( CfgCrowdRow[] rowConfig, ProgressionManager prog )

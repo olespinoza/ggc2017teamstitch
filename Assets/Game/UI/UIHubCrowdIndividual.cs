@@ -9,6 +9,8 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 	private Sprite[] _sprites = null;
 
+	[SerializeField] private AudioSource _missSound;
+
 	public void Configure( int row, int seat )
 	{
 		_image = GetComponent<UnityEngine.UI.Image>();
@@ -38,6 +40,11 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		CrowdIndividual model = gameState.m_rows[_row].m_individuals[_seat];
 
 		UpdateImage( model );
+
+		if (model.m_failThisFrame) 
+		{
+			_missSound.Play ();
+		}
 	}
 
 	public void UpdateImage( CrowdIndividual model )

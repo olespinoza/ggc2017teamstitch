@@ -15,6 +15,7 @@ public class CfgLevel
 	public float m_thetaRange;
 	public int m_coachPositions;
 	public CfgCrowdRow[] m_rows;
+	public string m_coachId;
 
 	public List<CfgWaveEntry> m_waveEntries = new List<CfgWaveEntry>();
 }

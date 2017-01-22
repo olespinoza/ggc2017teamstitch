@@ -15,8 +15,10 @@ public class CrowdIndividual
 	public CfgCrowdConfig m_config;
 	public float m_energy;
 
+	public bool m_failThisFrame = false;
+
 	public float m_waveAmount;
-	public float m_waveTheta; // -- Set by UI, in case we want some interesting tailoring
+	public float m_theta; // -- Set by UI, in case we want some interesting tailoring
 
 	public void Setup( CfgCrowdConfig config )
 	{

@@ -10,6 +10,9 @@ public class Coach
 		CHEERING
 	}
 
+	public CfgCoach m_cfg;
+
+	public float m_realPoint;
 	public int m_slot;
 	public int m_slots;
 	public float m_cheer;

@@ -58,9 +58,15 @@ public class GameStateManager : IManager
 
 				// update waves!
 				WaveController.UpdateWaves (_gameState.m_waves, dt);
+				float rightChannel=0;
+				float leftChannel=0;
 				for (int i = 0; i < _gameState.m_waves.Count; ++i) 
 				{
 					Wave wave = _gameState.m_waves [i];
+
+					leftChannel = Mathf.Max( leftChannel, Mathf.Max (0, lcfg.m_thetaRange - Mathf.Abs (wave.RawTheta - (180.0f - lcfg.m_thetaRange/2))) / lcfg.m_thetaRange );
+					rightChannel = Mathf.Max( rightChannel, Mathf.Max (0, lcfg.m_thetaRange - Mathf.Abs (wave.RawTheta - (180.0f + lcfg.m_thetaRange/2))) / lcfg.m_thetaRange );
+						
 					float threshold = 180.0f + lcfg.m_thetaRange / 2;
 					if (wave.RawTheta >= threshold && wave.RawLastTheta < threshold) 
 					{
@@ -69,6 +75,17 @@ public class GameStateManager : IManager
 						_ui.PlayEffect (effectId);
 						_gameState.m_waveIndex++;
 					}
+				}
+
+				AudioSource asrc = GameObject.Find ("CrowdRoar").GetComponent<AudioSource> ();
+
+				if (leftChannel <= 0 && rightChannel <= 0) {
+					if( asrc.isPlaying ) asrc.Stop ();
+				} else {
+					asrc.volume = Mathf.Min(1.0f, leftChannel + rightChannel);
+					asrc.panStereo = rightChannel - leftChannel;
+
+					if (!asrc.isPlaying) asrc.Play ();
 				}
 			}
 			// update crowd

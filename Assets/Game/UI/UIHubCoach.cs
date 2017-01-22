@@ -49,7 +49,7 @@ public class UIHubCoach : MonoBehaviour, IHub
 			{
 				UpdateSprite (3);
 			} 
-			else if (Mathf.Abs (model.m_realPoint - model.m_slot) < 0.01f && model.m_cfg.m_animateWhileStill == false) 
+			else if (Mathf.Abs (model.m_realPoint - (float)model.m_slot) < 0.01f && model.m_cfg.m_animateWhileStill == false) 
 			{
 				UpdateSprite (0);
 			} 

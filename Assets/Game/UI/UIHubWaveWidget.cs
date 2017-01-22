@@ -3,8 +3,6 @@ using System.Collections;
 
 public class UIHubWaveWidget : MonoBehaviour, IHub
 {
-	[SerializeField] private RectTransform _spot;
-	[SerializeField] private Vector2 _spotRange;
 
 	public void OnLevelChange( AppManager app )
 	{
@@ -19,9 +17,9 @@ public class UIHubWaveWidget : MonoBehaviour, IHub
 		{
 			Wave wave = gameState.m_waves[0];
 			float theta = (wave.Theta - 90.0f) * Mathf.Deg2Rad;
-			Vector2 cartesian = new Vector2( Mathf.Cos( theta ) * _spotRange.x, Mathf.Sin( theta ) * _spotRange.y );
+//			Vector2 cartesian = new Vector2( Mathf.Cos( theta ) * _spotRange.x, Mathf.Sin( theta ) * _spotRange.y );
 
-			_spot.anchoredPosition = cartesian;
+			//_spot.anchoredPosition = cartesian;
 		}
 	}
 }

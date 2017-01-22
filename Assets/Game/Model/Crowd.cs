@@ -16,6 +16,7 @@ public class CrowdIndividual
 	public float m_energy;
 
 	public bool m_failThisFrame = false;
+	public bool m_waveThisFrame = false;
 
 	public float m_waveAmount;
 	public float m_theta; // -- Set by UI, in case we want some interesting tailoring

@@ -25,9 +25,20 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 		if( _fallbackImage != null )
 		{
 			_fallbackTicker -= Time.deltaTime;
-			if( _fallbackTicker <= 0 )
+			if (_fallbackTicker <= 0) 
 			{
 				_fallbackImage.enabled = false;
+			} 
+			else
+			{
+				float fadeTime = app.GameStateManager.GameState.m_generalConfig.m_uiTextFadeTime;
+				float frontFade = Mathf.Min (1.0f, _fallbackTicker * fadeTime);
+				float backFade = Mathf.Max (0.0f, _fallbackTicker * fadeTime - _fallbackImageDuration);
+				float fading = Mathf.Min (frontFade, backFade);
+				if (fading != _fallbackImage.color.a) 
+				{
+					_fallbackImage.color = new Color (1, 1, 1, fading);
+				}
 			}
 		}
 

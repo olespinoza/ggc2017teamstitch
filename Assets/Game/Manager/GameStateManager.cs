@@ -53,10 +53,23 @@ public class GameStateManager : IManager
 
 			List<Wave> newWaves = WaveController.GetNewWavesForTimeRange(lcfg, oldTime, newTime);
 			_gameState.m_waves.AddRange( newWaves );
-			_gameState.m_waveIndex += newWaves.Count;
 
 			// update waves!
 			WaveController.UpdateWaves( _gameState.m_waves, dt );
+			for (int i = 0; i < _gameState.m_waves.Count; ++i) 
+			{
+				Wave wave = _gameState.m_waves [i];
+				float threshold = 180.0f + lcfg.m_thetaRange / 2;
+				if (wave.RawTheta >= threshold && wave.RawLastTheta < threshold)
+				{
+					int qualityPass = wave.GetAndResetQualityCheck ();
+					string effectId = "WaveFinished" + (wave.Invert ? "L" : "R") + qualityPass.ToString ();
+					_ui.PlayEffect (effectId);
+					_gameState.m_waveIndex++;
+				}
+			}
+
+			// update crowd
 			KeyValuePair<int, int> crowdResult = CrowdController.UpdateCrowd(_gameState, dt);
 			_gameState.m_score += crowdResult.Key;
 			int failures = crowdResult.Value;
@@ -138,8 +151,12 @@ public class GameStateManager : IManager
 		_gameState.m_rows = CrowdController.PopulateCrowd(lcfg.m_rows, _prog);
 
 		_gameState.m_waves = WaveController.GetNewWavesForTimeRange(lcfg, -1, 0);
-		_gameState.m_waveCount = lcfg.m_waveEntries.Count;
-		_gameState.m_waveIndex = _gameState.m_waves.Count;
+		_gameState.m_waveCount = 0;
+		for (int i = 0; i < lcfg.m_waveEntries.Count; ++i) 
+		{
+			_gameState.m_waveCount += lcfg.m_waveEntries [i].m_iterations;
+		}
+		_gameState.m_waveIndex = 0;
 
 		_ui.OnLevelChange();
 	}

@@ -15,6 +15,7 @@ public class UIHubGameFlier : MonoBehaviour, IHub
 	private float _fade = 0.0f;
 	private bool _wasActive = false;
 	[SerializeField] private Stimulus _stimulus;
+	[SerializeField] private AudioSource _overrideAudioSource;
 
 	private void Start()
 	{

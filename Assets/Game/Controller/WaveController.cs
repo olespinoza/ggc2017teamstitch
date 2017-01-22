@@ -34,15 +34,44 @@ public class WaveController
 		return waves.Count == 0;
 	}
 
-	public static float GetWaveStrengthAt( List<Wave> waves, float theta, bool prevFrame )
+	public static float CheckCrowdIndividual (List<Wave> waves, CrowdIndividual individual)
 	{
+		float prevAmplitude = 0;
 		float amplitude = 0;
 		for(int i = 0; i < waves.Count; ++i)
 		{
 			Wave wave = waves[i];
-			float waveMag = wave.GetMagnitudeAt(theta, prevFrame);
+
+			float prevWaveMag = wave.GetMagnitudeAt(individual.m_theta, true);
+			prevAmplitude = Mathf.Max(prevAmplitude, prevWaveMag);
+
+			float waveMag = wave.GetMagnitudeAt(individual.m_theta, false);
 			amplitude = Mathf.Max(amplitude, waveMag);
+
+			// first impact
+			if (prevWaveMag <= 0 && waveMag > 0) 
+			{
+				if (individual.GetState () == CrowdIndividual.State.STATE_RED) 
+				{
+					wave.AddRedHit ();
+				}
+				else if (individual.GetState () == CrowdIndividual.State.STATE_YELLOW)
+				{
+					wave.AddYellowHit ();
+				}
+			}
 		}
+
+		if ( prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED )
+		{
+			individual.m_failThisFrame = true;
+		}
+		else if (prevAmplitude <= 0 && amplitude > 0) 
+		{
+			individual.m_waveThisFrame = true;
+		}
+
 		return amplitude;
 	}
+
 }

@@ -19,23 +19,22 @@ public class CrowdController
 				CrowdIndividual individual = row.m_individuals [j];
 				if (individual != null) 
 				{
+					individual.m_waveThisFrame = false;
 					individual.m_failThisFrame = false;
-					float prevAmplitude = WaveController.GetWaveStrengthAt (waves, individual.m_theta, true);
-					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_theta, false);
+					float amplitude = WaveController.CheckCrowdIndividual (waves, individual);
 
-					// fail
-					if ( prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED )
+					if( individual.m_failThisFrame )
 					{
 						damage++;
-						individual.m_failThisFrame = true;
 					}
+					if (individual.m_waveThisFrame) 
+					{
+						score += individual.m_config.m_scorePerWave;
+					}
+
 					// start/continue wave
 					else if( individual.GetState() != CrowdIndividual.State.STATE_RED )
 					{
-						if (prevAmplitude <= 0 && amplitude > 0) 
-						{
-							score += individual.m_config.m_scorePerWave;
-						}
 						individual.m_waveAmount = amplitude;
 					}
 

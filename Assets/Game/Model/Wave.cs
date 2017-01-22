@@ -16,12 +16,49 @@ public class Wave
 	private bool _kill = false;
 	private int _iterationsLeft = 0;
 
+	private int _missesThisPass=0;
+	private int _unhappiesThisPass=0;
+
+	public float RawTheta { get { return _theta; } }
+	public float RawLastTheta { get { return _lastTheta; } }
+
 	public float Theta { get { return _cfg.m_invert ? _theta : 360.0f-_theta; } }
 	public float LastTheta { get { return _cfg.m_invert ? _lastTheta : 360.0f-_lastTheta; } }
 
 	public bool Invert { get { return _cfg.m_invert; } }
 	public float Width { get { return _width; } }
 	public float Amplitude { get { return _amplitude; } }
+
+	public void AddYellowHit()
+	{
+		_unhappiesThisPass++;
+	}
+	public void AddRedHit()
+	{
+		_missesThisPass++;
+	}
+
+	public int GetAndResetQualityCheck()
+	{
+		int result;
+		if (_missesThisPass > 0) 
+		{
+			result = 0;
+		}
+		else if (_unhappiesThisPass > 0) 
+		{
+			result = 1;
+		}
+		else
+		{
+			result = 2;
+		}
+
+		_unhappiesThisPass = 0;
+		_missesThisPass = 0;
+
+		return result;
+	}
 
 	public Wave( CfgWaveEntry cfg )
 	{

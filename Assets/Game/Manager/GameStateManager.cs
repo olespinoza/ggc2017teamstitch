@@ -143,6 +143,10 @@ public class GameStateManager : IManager
 
 		CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
 
+		AudioSource aSrc = Camera.main.GetComponent<AudioSource> ();
+		aSrc.clip = lcfg.m_music;
+		aSrc.Play ();
+
 		_gameState.m_thetaRange = lcfg.m_thetaRange;
 
 		_gameState.ResetLevel ();

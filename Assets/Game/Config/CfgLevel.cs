@@ -12,6 +12,8 @@ public class CfgCrowdRow
 [System.Serializable]
 public class CfgLevel
 {
+	public AudioClip m_music;
+
 	public float m_thetaRange;
 	public float m_incomingWarningRange;
 	public int m_coachPositions;

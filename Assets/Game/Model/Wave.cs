@@ -54,11 +54,16 @@ public class Wave
 		if( _theta > 360.0f )
 		{
 			_theta -= 360.0f;
-			_omega /= _cfg.m_periodMultiplierPerLoop;
 			_iterationsLeft--;
-			if( _iterationsLeft <= 0 )
+			if (_iterationsLeft <= 0) 
 			{
 				_kill = true;
+			}
+			else
+			{
+				float percent = (float)(_iterationsLeft-1) / (float)(_cfg.m_iterations-1);
+				float period = _cfg.m_initialPeriod * (percent) + _cfg.m_finalPeriod * (1-percent);
+				_omega = 360.0f / period;
 			}
 		}
 		return false;

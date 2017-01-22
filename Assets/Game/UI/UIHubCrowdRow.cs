@@ -38,7 +38,7 @@ public class UIHubCrowdRow : MonoBehaviour, IHub
 					float x = (stagger + i) * spacing;
 					go.transform.localPosition = new Vector3(x, 0, 0);
 		
-					float percent = x / UIManager.STADIUM_WIDTH; // not sure how to derive this; fuck it.
+					float percent = x / (UIManager.STADIUM_WIDTH-UIManager.CHARACTER_WIDTH); // not sure how to derive this; fuck it.
 					gameState.m_rows [_rowId].m_individuals[i].m_theta = percent * leftTheta + (1 - percent) * rightTheta;
 
 					UIHubCrowdIndividual uiHCI = go.GetComponent<UIHubCrowdIndividual> ();

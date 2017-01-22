@@ -35,6 +35,7 @@ public class CoachController
 			coach.m_cheer = coach.m_cfg.m_cheerDuration;
 
 			float theta = GetThetaFor( thetaRange, coach );
+
 			CrowdController.PepUp(rows, theta, coach.m_cfg.m_cheerWidth );
 		}
 
@@ -58,6 +59,6 @@ public class CoachController
 	private static float GetThetaFor( float thetaRange, Coach coach )
 	{
 		float percent = (coach.m_realPoint / (float)(coach.m_slots - 1));
-		return (percent * 2 - 1) * thetaRange;
+		return 180.0f - (percent - 0.5f) * thetaRange;
 	}
 }

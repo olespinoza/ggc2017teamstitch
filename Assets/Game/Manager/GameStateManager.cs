@@ -74,6 +74,10 @@ public class GameStateManager : IManager
 			bool levelFinished = CheckLevelComplete ();
 			if (levelFinished && _gameState.m_levelFailedTicker <= 0) 
 			{
+				if (_gameState.m_levelFinishedTicker <= 0) 
+				{
+					_ui.PlayEffect ("Confetti");
+				}
 				_gameState.m_levelFinishedTicker += dt;
 			}
 

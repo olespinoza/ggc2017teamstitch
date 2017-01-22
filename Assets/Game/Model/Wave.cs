@@ -25,6 +25,8 @@ public class Wave
 	public float Theta { get { return _cfg.m_invert ? _theta : 360.0f-_theta; } }
 	public float LastTheta { get { return _cfg.m_invert ? _lastTheta : 360.0f-_lastTheta; } }
 
+	public float Period { get { return 360.0f / _omega; } }
+
 	public bool Invert { get { return _cfg.m_invert; } }
 	public float Width { get { return _width; } }
 	public float Amplitude { get { return _amplitude; } }

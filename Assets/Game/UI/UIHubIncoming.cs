@@ -24,10 +24,12 @@ public class UIHubIncoming : MonoBehaviour, IHub
 		{
 			CfgLevel level = app.ProgressionManager.GetLevelConfigByIndex (gameState.m_currentLevel);
 
+			float blinkRate = 1.0f;
 			bool on = false;
 			for (int i = 0; i < gameState.m_waves.Count; ++i) 
 			{
 				Wave wave = gameState.m_waves [i];
+				blinkRate = Mathf.Max (20.0f / wave.Period);
 				if (wave.Invert && _invert) 
 				{
 					float theta = (wave.Theta) + wave.Width;
@@ -49,7 +51,7 @@ public class UIHubIncoming : MonoBehaviour, IHub
 					}
 				}
 			}
-			bool blink = (Mathf.FloorToInt (Time.time * 3.0f) % 2) == 0;
+			bool blink = (Mathf.FloorToInt (Time.time * blinkRate) % 2) == 0;
 			_image.enabled = on && blink;
 		} 
 		else

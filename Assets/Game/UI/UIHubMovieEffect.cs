@@ -13,16 +13,21 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 
 	public void UI( AppManager app )
 	{
+		#if UNITY_WEBGL
+		#else
 		if (_movie != null) 
 		{
 			Texture main = _movie.material.mainTexture;
 			MovieTexture mainMovie = main as MovieTexture;
 			_movie.enabled = mainMovie.isPlaying;
 		}
+		#endif
 	}
 
 	public void Play()
 	{
+		#if UNITY_WEBGL
+		#else
 		if (_movie != null)
 		{
 			Texture mask = _movie.material.GetTexture("_Mask");
@@ -35,5 +40,6 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 			mainMovie.Stop ();
 			mainMovie.Play ();
 		}
+		#endif
 	}
 }

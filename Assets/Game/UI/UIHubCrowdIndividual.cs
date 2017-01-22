@@ -55,7 +55,7 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		float sag = 0;
 		if (model.m_energy < model.m_config.m_greenTime + model.m_config.m_yellowTime) 
 		{
-			sag = 1.0f - (model.m_energy / (model.m_config.m_greenTime + model.m_config.m_yellowTime));
+			sag = Mathf.Min(1.0f, 1.0f - (model.m_energy / (model.m_config.m_greenTime + model.m_config.m_yellowTime)));
 			sag *= sag * (1.0f - model.m_waveAmount);
 		}
 		_y = _yOrigin - sag * gameState.m_generalConfig.m_crowdSagDepth + model.m_waveAmount*model.m_waveAmount * gameState.m_generalConfig.m_crowdWaveHeight;

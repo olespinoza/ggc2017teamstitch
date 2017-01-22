@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class ConfigBundle : ScriptableObject
 {
 	public int m_startLevel = 0;
+	public int m_maxHealth = 0;
 	public List< CfgLevel > m_levels = new List< CfgLevel >();
 	public List< CfgCrowdConfig > m_crowdConfigs = new List< CfgCrowdConfig >();
 	public List< CfgCoach > m_coaches = new List< CfgCoach >();

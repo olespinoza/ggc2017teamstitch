@@ -8,6 +8,7 @@ public class ProgressionManager : IManager
 	private Dictionary< string, CfgCoach > _coachConfigs = new Dictionary<string, CfgCoach> ();
 	private List< CfgLevel > _levels = new List<CfgLevel>();
 	private int _startLevel;
+	private int _maxHealth;
 
 	public class InitData : ManagerInitData
 	{
@@ -22,6 +23,11 @@ public class ProgressionManager : IManager
 	}
 
 	#region IManager
+
+	public int GetMaxHealth()
+	{
+		return _maxHealth;
+	}
 
 	public int GetStartLevel()
 	{
@@ -91,6 +97,7 @@ public class ProgressionManager : IManager
 	void ParseConfigBundle( ConfigBundle bundle )
 	{
 		_startLevel = bundle.m_startLevel;
+		_maxHealth = bundle.m_maxHealth;
 
 		for( int i=0; i<bundle.m_levels.Count; ++i )
 		{

@@ -3,6 +3,10 @@ using System.Collections;
 
 public class UIHubWaveWidget : MonoBehaviour, IHub
 {
+	[SerializeField] private UnityEngine.UI.Image _ccw;
+	[SerializeField] private UnityEngine.UI.Image _cw;
+
+	private float[] _widgetDensity = new float[256];
 
 	public void OnLevelChange( AppManager app )
 	{
@@ -13,13 +17,38 @@ public class UIHubWaveWidget : MonoBehaviour, IHub
 	{
 		GameState gameState = app.GameStateManager.GameState;
 
-		if( gameState.m_waves.Count > 0 )
+		for (int i = 0; i < 256; ++i) 
 		{
-			Wave wave = gameState.m_waves[0];
-			float theta = (wave.Theta - 90.0f) * Mathf.Deg2Rad;
-//			Vector2 cartesian = new Vector2( Mathf.Cos( theta ) * _spotRange.x, Mathf.Sin( theta ) * _spotRange.y );
-
-			//_spot.anchoredPosition = cartesian;
+			_widgetDensity [i] = 0.0f;
 		}
+
+		bool showCCW = false;
+		bool showCW = false;
+		for (int i = 0; i < gameState.m_waves.Count; ++i) 
+		{
+			Wave wave = gameState.m_waves [i];
+			if (wave.Invert)
+			{
+				showCCW = true;
+			} 
+			else
+			{
+				showCW = true;
+			}
+
+			float min = (wave.Theta - wave.Width)*256.0f/360.0f;
+			float max = (wave.Theta + wave.Width)*256.0f/360.0f;
+			for (int j = Mathf.FloorToInt (min); j <= Mathf.FloorToInt (max); ++j)
+			{
+				int k = j;
+				while( k < 0 ) { k += 256; }
+				while( k > 255 ) { k -= 256; }
+
+				_widgetDensity [k] = 1.0f;
+			}
+		}
+
+		_cw.enabled = showCW;
+		_ccw.enabled = showCCW;
 	}
 }

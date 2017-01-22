@@ -8,11 +8,13 @@ public class UIProgressBar : MonoBehaviour
 	[SerializeField] private UnityEngine.UI.Text _text;
 
 	[SerializeField] private Color _ColorFull;
+	[SerializeField] private Color _ColorMid;
 	[SerializeField] private Color _ColorEmpty;
-	[SerializeField] private Color _ColorNegative;
 
 	[SerializeField] private float _value = 1.0f;
 	[SerializeField] private float _max = 1.0f;
+
+	public float Value { get { return _value; } set { _value = value; } }
 
 	void Update()
 	{
@@ -27,13 +29,13 @@ public class UIProgressBar : MonoBehaviour
 		{
 			float size = Mathf.Abs(clampedValue) * _background.rectTransform.rect.width;
 			_foreground.rectTransform.SetSizeWithCurrentAnchors( RectTransform.Axis.Horizontal, size );
-			if( _value < 0 )
+			if( _value < .5 )
 			{
-				_foreground.color = Color.Lerp( _ColorEmpty, _ColorNegative, -clampedValue );
+				_foreground.color = Color.Lerp( _ColorEmpty, _ColorMid, clampedValue*2 );
 			}
 			else
 			{
-				_foreground.color = Color.Lerp( _ColorEmpty, _ColorFull, clampedValue );
+				_foreground.color = Color.Lerp( _ColorMid, _ColorFull, (clampedValue-0.5f)*2 );
 			}
 		}
 	}

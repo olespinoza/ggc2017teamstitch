@@ -82,6 +82,9 @@ public class GameStateManager : IManager
 		_gameState.m_thetaRange = lcfg.m_thetaRange;
 		_gameState.m_levelTime = 0;
 
+		_gameState.m_maxHealth = _prog.GetMaxHealth();
+		_gameState.m_health = _gameState.m_maxHealth;
+
 		CfgCoach ccfg = _prog.GetCoachConfigById (lcfg.m_coachId);
 		CoachController.SetupCoach (_gameState.m_coach, ccfg, lcfg.m_coachPositions );
 

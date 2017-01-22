@@ -9,6 +9,7 @@ public class Wave
 
 	private float _theta=0.0f;
 	private float _omega=0.0f;
+	private float _lastTheta=0.0f;
 	private float _amplitude=0.0f;
 	private float _width=0.0f;
 
@@ -16,12 +17,14 @@ public class Wave
 	private int _iterationsLeft = 0;
 
 	public float Theta { get { return _cfg.m_invert ? _theta : 360.0f-_theta; } }
+	public float LastTheta { get { return _cfg.m_invert ? _lastTheta : 360.0f-_lastTheta; } }
 
 	public Wave( CfgWaveEntry cfg )
 	{
 		_cfg = cfg;
 
 		_theta = 0.0f;
+		_lastTheta = 0.0f;
 		_amplitude = 0.0f;
 		_width = _cfg.m_width;
 
@@ -29,9 +32,9 @@ public class Wave
 		_iterationsLeft = _cfg.m_iterations;
 	}
 
-	public float GetMagnitudeAt( float theta )
+	public float GetMagnitudeAt( float theta, bool prevFrame )
 	{
-		float distance = Mathf.Abs( theta - Theta );
+		float distance = Mathf.Abs( theta - (prevFrame ? LastTheta : Theta) );
 		return Mathf.Max( 0, 1.0f - distance / _width );
 	}
 		
@@ -50,6 +53,7 @@ public class Wave
 			_amplitude = Mathf.Min (1.0f, _amplitude + AMPLITUDE_RATE * Time.deltaTime);
 		}	
 
+		_lastTheta = _theta;
 		_theta += _omega * Time.deltaTime;
 		if( _theta > 360.0f )
 		{

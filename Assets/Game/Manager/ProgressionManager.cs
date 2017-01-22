@@ -6,6 +6,7 @@ public class ProgressionManager : IManager
 {
 	private Dictionary< string, CfgCrowdConfig > _crowdConfigs = new Dictionary<string, CfgCrowdConfig>();
 	private List< CfgLevel > _levels = new List<CfgLevel>();
+	private int _startLevel;
 
 	public class InitData : ManagerInitData
 	{
@@ -20,6 +21,11 @@ public class ProgressionManager : IManager
 	}
 
 	#region IManager
+
+	public int GetStartLevel()
+	{
+		return _startLevel;
+	}
 
 	public int GetLevelCount()
 	{
@@ -72,6 +78,8 @@ public class ProgressionManager : IManager
 
 	void ParseConfigBundle( ConfigBundle bundle )
 	{
+		_startLevel = bundle.m_startLevel;
+
 		for( int i=0; i<bundle.m_levels.Count; ++i )
 		{
 			CfgLevel lcfg = bundle.m_levels[i];

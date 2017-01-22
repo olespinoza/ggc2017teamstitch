@@ -16,16 +16,16 @@ public class CrowdController
 				if (individual != null) 
 				{
 
-					float prevAmplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta - dt);
-					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta);
+					float prevAmplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta, true);
+					float amplitude = WaveController.GetWaveStrengthAt (waves, individual.m_waveTheta, false);
 
 					// fail
-					if (prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED)
+					if ( prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED )
 					{
 						result++;
 					}
 					// start/continue wave
-					else
+					else if( individual.GetState() != CrowdIndividual.State.STATE_RED )
 					{
 						individual.m_waveAmount = amplitude;
 					}

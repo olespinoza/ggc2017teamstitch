@@ -34,13 +34,13 @@ public class WaveController
 		return waves.Count == 0;
 	}
 
-	public static float GetWaveStrengthAt( List<Wave> waves, float theta )
+	public static float GetWaveStrengthAt( List<Wave> waves, float theta, bool prevFrame )
 	{
 		float amplitude = 0;
 		for(int i = 0; i < waves.Count; ++i)
 		{
 			Wave wave = waves[i];
-			float waveMag = wave.GetMagnitudeAt(theta);
+			float waveMag = wave.GetMagnitudeAt(theta, prevFrame);
 			amplitude = Mathf.Max(amplitude, waveMag);
 		}
 		return amplitude;

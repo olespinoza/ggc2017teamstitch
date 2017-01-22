@@ -8,6 +8,7 @@ public class PhasePlay : IPhase
 	{
 		AppManager app = app_ as AppManager;
 
+		app.GameStateManager.GameState.m_currentLevel = app.ProgressionManager.GetStartLevel () - 1;
 		app.GameStateManager.NextLevel();
 	}
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ConfigBundle : ScriptableObject
 {
+	public int m_startLevel = 0;
 	public List< CfgLevel > m_levels = new List< CfgLevel >();
 	public List< CfgCrowdConfig > m_crowdConfigs = new List< CfgCrowdConfig >();
 }

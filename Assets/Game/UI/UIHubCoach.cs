@@ -68,5 +68,6 @@ public class UIHubCoach : MonoBehaviour, IHub
 		{
 			_image.sprite = _sprites [index];
 		}
+		_image.enabled = true;
 	}
 }

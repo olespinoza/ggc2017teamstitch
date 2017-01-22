@@ -169,7 +169,7 @@ public class GameStateManager : IManager
 		_gameState.ResetLevel ();
 
 		CfgCoach ccfg = _prog.GetCoachConfigById (lcfg.m_coachId);
-		CoachController.SetupCoach (_gameState.m_coach, ccfg, lcfg.m_coachPositions );
+		CoachController.SetupCoach (_gameState.m_currentLevel == 0, _gameState.m_coach, ccfg, lcfg.m_coachPositions );
 
 		_gameState.m_rows = CrowdController.PopulateCrowd(lcfg.m_rows, _prog);
 

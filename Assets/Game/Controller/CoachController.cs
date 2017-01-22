@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CoachController
 {
-	public static void SetupCoach( Coach coach, CfgCoach cfg, int slots )
+	public static void SetupCoach( bool firstLevel, Coach coach, CfgCoach cfg, int slots )
 	{
 		coach.m_cfg = cfg;
 		coach.m_slots = slots;
 		coach.m_slot = slots / 2;
-		coach.m_realPoint = coach.m_slot;
+		coach.m_realPoint = firstLevel ? -5.0f : coach.m_slot;
 	}
 
 	public static void UpdateCoach( UIManager ui, GameState gameState, float thetaRange, float finalLevelIndex, float dt )

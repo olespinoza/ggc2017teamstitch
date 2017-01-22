@@ -51,24 +51,26 @@ public class GameStateManager : IManager
 
 			CoachController.UpdateCoach( _ui, _gameState, lcfg.m_thetaRange, _prog.GetLevelCount()-1, dt );
 
-			List<Wave> newWaves = WaveController.GetNewWavesForTimeRange(lcfg, oldTime, newTime);
-			_gameState.m_waves.AddRange( newWaves );
-
-			// update waves!
-			WaveController.UpdateWaves( _gameState.m_waves, dt );
-			for (int i = 0; i < _gameState.m_waves.Count; ++i) 
+			if (_gameState.m_levelFailedTicker <= 0) 
 			{
-				Wave wave = _gameState.m_waves [i];
-				float threshold = 180.0f + lcfg.m_thetaRange / 2;
-				if (wave.RawTheta >= threshold && wave.RawLastTheta < threshold)
+				List<Wave> newWaves = WaveController.GetNewWavesForTimeRange (lcfg, oldTime, newTime);
+				_gameState.m_waves.AddRange (newWaves);
+
+				// update waves!
+				WaveController.UpdateWaves (_gameState.m_waves, dt);
+				for (int i = 0; i < _gameState.m_waves.Count; ++i) 
 				{
-					int qualityPass = wave.GetAndResetQualityCheck ();
-					string effectId = "WaveFinished" + (wave.Invert ? "L" : "R") + qualityPass.ToString ();
-					_ui.PlayEffect (effectId);
-					_gameState.m_waveIndex++;
+					Wave wave = _gameState.m_waves [i];
+					float threshold = 180.0f + lcfg.m_thetaRange / 2;
+					if (wave.RawTheta >= threshold && wave.RawLastTheta < threshold) 
+					{
+						int qualityPass = wave.GetAndResetQualityCheck ();
+						string effectId = "WaveFinished" + (wave.Invert ? "L" : "R") + qualityPass.ToString ();
+						_ui.PlayEffect (effectId);
+						_gameState.m_waveIndex++;
+					}
 				}
 			}
-
 			// update crowd
 			KeyValuePair<int, int> crowdResult = CrowdController.UpdateCrowd(_gameState, dt);
 			_gameState.m_score += crowdResult.Key;

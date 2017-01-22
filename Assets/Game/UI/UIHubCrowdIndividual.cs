@@ -47,7 +47,14 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 		UpdateImage( model );
 
-		if (model.m_failThisFrame) 
+		if (gameState.m_levelFailedTicker > 0) 
+		{
+			if (_missSound.isPlaying) 
+			{
+				_missSound.Stop ();
+			}
+		}
+		else if (model.m_failThisFrame ) 
 		{
 			_missSound.Play ();
 		}

@@ -15,12 +15,13 @@ public class UIHubGameFlier : MonoBehaviour, IHub
 	private float _fade = 0.0f;
 	private bool _wasActive = false;
 	[SerializeField] private Stimulus _stimulus;
-	[SerializeField] private AudioSource _overrideAudioSource;
+	private AudioSource _overrideAudioSource;
 
 	private void Start()
 	{
 		_image = GetComponent<UnityEngine.UI.Image> ();
 		_mainAudioSource = Camera.main.GetComponent<AudioSource> ();
+		_overrideAudioSource = GetComponent<AudioSource> ();
 	}
 
 	public void OnLevelChange( AppManager app )
@@ -47,11 +48,11 @@ public class UIHubGameFlier : MonoBehaviour, IHub
 
 			if (active) 
 			{
-				// soundblah?
-//			if (!_wasActive) 
-//			{
-//			
-//			}
+				if (!_wasActive && _overrideAudioSource != null) 
+				{
+					_mainAudioSource.Stop ();
+					_overrideAudioSource.Play ();
+				}
 				_fade = Mathf.Clamp01 (_fade + Time.deltaTime * fadeTime);
 				if (_fade != _image.color.a) 
 				{

@@ -62,6 +62,11 @@ public class CoachController
 		{
 			coach.m_realPoint += moveStep;
 		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) 
+		{
+			Application.Quit ();
+		}
 	}
 
 	private static float GetThetaFor( float thetaRange, Coach coach )

@@ -4,6 +4,10 @@ using System.Collections;
 public class UIHubCrowdIndividual : MonoBehaviour, IHub
 {
 	private UnityEngine.UI.Image _image;
+
+	private float _yOrigin;
+	private float _y;
+
 	private int _row;
 	private int _seat;
 
@@ -14,6 +18,8 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 	public void Configure( int row, int seat )
 	{
 		_image = GetComponent<UnityEngine.UI.Image>();
+		_yOrigin = _image.rectTransform.localPosition.y;
+		_y = _yOrigin;
 		_row = row;
 		_seat = seat;
 	}
@@ -45,6 +51,19 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		{
 			_missSound.Play ();
 		}
+
+		float sag = 0;
+		if (model.m_energy < model.m_config.m_greenTime + model.m_config.m_yellowTime) 
+		{
+			sag = 1.0f - (model.m_energy / (model.m_config.m_greenTime + model.m_config.m_yellowTime));
+			sag *= sag * (1.0f - model.m_waveAmount);
+		}
+		_y = _yOrigin - sag * gameState.m_generalConfig.m_crowdSagDepth + model.m_waveAmount*model.m_waveAmount * gameState.m_generalConfig.m_crowdWaveHeight;
+
+		Vector3 ltp = _image.rectTransform.localPosition;
+		ltp.y = _y;
+		_image.rectTransform.localPosition = ltp;
+
 	}
 
 	public void UpdateImage( CrowdIndividual model )

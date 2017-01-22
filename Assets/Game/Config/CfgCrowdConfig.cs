@@ -12,4 +12,6 @@ public class CfgCrowdConfig
 	public float m_greenTimeExtra = 4.0f;
 
 	public Texture2D m_asset;
+
+	public int m_scorePerWave = 100;
 }

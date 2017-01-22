@@ -30,26 +30,31 @@ public class UIHubIncoming : MonoBehaviour, IHub
 				Wave wave = gameState.m_waves [i];
 				if (wave.Invert && _invert) 
 				{
-					float theta = (wave.Theta)+ wave.Width;
+					float theta = (wave.Theta) + wave.Width;
 					float max = 180.0f - level.m_thetaRange / 2;
 					float min = max - level.m_incomingWarningRange;
-					if ( theta > min && theta <= max ) 
+					if (theta > min && theta <= max) 
 					{
 						on = true;
 					}
-				} 
-				else if(!wave.Invert && !_invert)
+				}
+				else if (!wave.Invert && !_invert) 
 				{
-					float theta = (360.0f-wave.Theta)+ wave.Width;
+					float theta = (360.0f - wave.Theta) + wave.Width;
 					float max = 180.0f - level.m_thetaRange / 2;
 					float min = max - level.m_incomingWarningRange;
-					if (theta > min && theta <= max)
+					if (theta > min && theta <= max) 
 					{
 						on = true;
 					}
 				}
 			}
-			_image.enabled = on;
+			bool blink = (Mathf.FloorToInt (Time.time * 3.0f) % 2) == 0;
+			_image.enabled = on && blink;
+		} 
+		else
+		{
+			_image.enabled = false;
 		}
 	}
 }

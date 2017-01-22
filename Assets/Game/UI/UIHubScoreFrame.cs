@@ -17,7 +17,7 @@ public class UIHubScoreFrame : MonoBehaviour, IHub
 		GameState gameState = app.GameStateManager.GameState;
 
 		_score.text = gameState.m_score.ToString("#,#");
-		_wave.text = "Wave #" + gameState.m_wave.ToString();
+		_wave.text = "Wave #" + gameState.m_waveIndex.ToString();
 		_progressBar.Value = (float)gameState.m_health / (float)gameState.m_maxHealth;
 	}
 }

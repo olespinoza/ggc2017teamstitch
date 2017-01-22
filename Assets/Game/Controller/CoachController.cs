@@ -12,31 +12,39 @@ public class CoachController
 		coach.m_realPoint = coach.m_slot;
 	}
 
-	public static void UpdateCoach( UIManager ui, Coach coach, List<CrowdRow> rows, float thetaRange, float dt )
+	public static void UpdateCoach( UIManager ui, GameState gameState, float thetaRange, float finalLevelIndex, float dt )
 	{
-		if(Input.GetButtonDown("left") && coach.m_slot > 0 )
-		{
-			coach.m_slot--;
-		}
+		Coach coach = gameState.m_coach;
+		List<CrowdRow> rows = gameState.m_rows;
 
-		if(Input.GetButtonDown("right") && coach.m_slot < coach.m_slots-1 )
+		if (gameState.m_levelFailedTicker > gameState.m_generalConfig.m_loseSavorDelay ||
+		   (gameState.m_levelFinishedTicker > gameState.m_generalConfig.m_winSavorDelay && gameState.m_currentLevel >= finalLevelIndex)) {
+			coach.m_slot = -3;
+		} 
+		else
 		{
-			coach.m_slot++;
-		}
-
-		if (Input.GetButtonDown ("cheer"))
-		{
-			string[] cheerEffects = coach.m_cfg.m_cheerEffects;
-			if (cheerEffects.Length > 0)
+			if (Input.GetButtonDown ("left") && coach.m_slot > 0) 
 			{
-				int effectId = Random.Range (0, cheerEffects.Length);
-				ui.PlayEffect (cheerEffects[effectId]);
+				coach.m_slot--;
 			}
-			coach.m_cheer = coach.m_cfg.m_cheerDuration;
 
-			float theta = GetThetaFor( thetaRange, coach );
+			if (Input.GetButtonDown ("right") && coach.m_slot < coach.m_slots - 1) {
+				coach.m_slot++;
+			}
 
-			CrowdController.PepUp(rows, theta, coach.m_cfg.m_cheerWidth );
+			if (Input.GetButtonDown ("cheer") && coach.m_cheer <= 0) 
+			{
+				string[] cheerEffects = coach.m_cfg.m_cheerEffects;
+				if (cheerEffects.Length > 0) {
+					int effectId = Random.Range (0, cheerEffects.Length);
+					ui.PlayEffect (cheerEffects [effectId]);
+				}
+				coach.m_cheer = coach.m_cfg.m_cheerDuration;
+
+				float theta = GetThetaFor (thetaRange, coach);
+
+				CrowdController.PepUp (rows, theta, coach.m_cfg.m_cheerWidth);
+			}
 		}
 
 		coach.m_cheer = Mathf.Max(0, coach.m_cheer - dt);

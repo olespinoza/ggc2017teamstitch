@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class CrowdController
 {
-	public static int UpdateCrowd( List<CrowdRow> rows, List<Wave> waves, float dt)
+	public static KeyValuePair<int , int> UpdateCrowd( GameState gameState, float dt)
 	{
-		int result = 0;
+		List<CrowdRow> rows = gameState.m_rows;
+		List<Wave> waves = gameState.m_waves;
+
+		int score = 0;
+		int damage = 0;
 		for (int i = 0; i < rows.Count; ++i)
 		{
 			CrowdRow row = rows [i];
@@ -22,20 +26,31 @@ public class CrowdController
 					// fail
 					if ( prevAmplitude <= 0 && amplitude > 0 && individual.GetState () == CrowdIndividual.State.STATE_RED )
 					{
-						result++;
+						damage++;
 						individual.m_failThisFrame = true;
 					}
 					// start/continue wave
 					else if( individual.GetState() != CrowdIndividual.State.STATE_RED )
 					{
+						if (prevAmplitude <= 0 && amplitude > 0) 
+						{
+							score += individual.m_config.m_scorePerWave;
+						}
 						individual.m_waveAmount = amplitude;
 					}
 
-					individual.m_energy -= dt;
+					if (gameState.m_levelFinishedTicker > 0) 
+					{
+						individual.ResetEnergy ();
+					}
+					else 
+					{
+						individual.m_energy -= dt;
+					}
 				}
 			}
 		}
-		return result;
+		return new KeyValuePair<int, int>(score,damage);
 	}
 
 	public static void PepUp( List<CrowdRow> rows, float theta, float width )

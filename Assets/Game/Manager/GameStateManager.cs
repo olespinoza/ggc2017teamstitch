@@ -49,18 +49,37 @@ public class GameStateManager : IManager
 
 			CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
 
-			CoachController.UpdateCoach( _ui, _gameState.m_coach, _gameState.m_rows, lcfg.m_thetaRange, dt );
+			CoachController.UpdateCoach( _ui, _gameState, lcfg.m_thetaRange, _prog.GetLevelCount()-1, dt );
 
 			List<Wave> newWaves = WaveController.GetNewWavesForTimeRange(lcfg, oldTime, newTime);
 			_gameState.m_waves.AddRange( newWaves );
+			_gameState.m_waveIndex += newWaves.Count;
 
 			// update waves!
-			bool levelOver = WaveController.UpdateWaves( _gameState.m_waves, dt );
-			int failures = CrowdController.UpdateCrowd(_gameState.m_rows, _gameState.m_waves, dt);
+			WaveController.UpdateWaves( _gameState.m_waves, dt );
+			KeyValuePair<int, int> crowdResult = CrowdController.UpdateCrowd(_gameState, dt);
+			_gameState.m_score += crowdResult.Key;
+			int failures = crowdResult.Value;
 
 			if (failures > 0) 
 			{
-				Debug.LogWarning ("Losses: " + failures);
+				_gameState.m_health = Mathf.Max( 0, _gameState.m_health - failures );
+			}
+
+			if (_gameState.m_health <= 0) 
+			{
+				_gameState.m_levelFailedTicker += dt;	
+			}
+
+			bool levelFinished = CheckLevelComplete ();
+			if (levelFinished && _gameState.m_levelFailedTicker <= 0) 
+			{
+				_gameState.m_levelFinishedTicker += dt;
+			}
+
+			if (_gameState.m_levelFinishedTicker > _gameState.m_generalConfig.m_winSavorDelay && _gameState.m_currentLevel < _prog.GetLevelCount()-1 )
+			{
+				NextLevel ();
 			}
 		}
 	}
@@ -73,6 +92,32 @@ public class GameStateManager : IManager
 		
 	#endregion
 
+	public void Init( CfgGeneral cfgGeneral )
+	{
+		_gameState.m_generalConfig = cfgGeneral;
+		_gameState.m_currentLevel = cfgGeneral.m_startLevel - 1;
+		NextLevel ();
+	}
+
+	private bool CheckLevelComplete()
+	{
+		if (_gameState.m_waves.Count == 0) 
+		{
+			CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
+			bool done = true;
+			for (int i = 0; i < lcfg.m_waveEntries.Count; ++i) 
+			{
+				CfgWaveEntry wave = lcfg.m_waveEntries [i];
+				if (_gameState.m_levelTime < wave.m_startTime) 
+				{
+					done = false;
+				}
+			}
+			return done;
+		}
+		return false;
+	}
+
 	public void NextLevel()
 	{
 		_gameState.m_currentLevel++;
@@ -80,10 +125,8 @@ public class GameStateManager : IManager
 		CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
 
 		_gameState.m_thetaRange = lcfg.m_thetaRange;
-		_gameState.m_levelTime = 0;
 
-		_gameState.m_maxHealth = _prog.GetMaxHealth();
-		_gameState.m_health = _gameState.m_maxHealth;
+		_gameState.ResetLevel ();
 
 		CfgCoach ccfg = _prog.GetCoachConfigById (lcfg.m_coachId);
 		CoachController.SetupCoach (_gameState.m_coach, ccfg, lcfg.m_coachPositions );
@@ -91,6 +134,7 @@ public class GameStateManager : IManager
 		_gameState.m_rows = CrowdController.PopulateCrowd(lcfg.m_rows, _prog);
 
 		_gameState.m_waves = WaveController.GetNewWavesForTimeRange(lcfg, -1, 0);
+		_gameState.m_waveIndex = _gameState.m_waves.Count;
 
 		_ui.OnLevelChange();
 	}

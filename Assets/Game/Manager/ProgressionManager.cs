@@ -7,8 +7,7 @@ public class ProgressionManager : IManager
 	private Dictionary< string, CfgCrowdConfig > _crowdConfigs = new Dictionary<string, CfgCrowdConfig>();
 	private Dictionary< string, CfgCoach > _coachConfigs = new Dictionary<string, CfgCoach> ();
 	private List< CfgLevel > _levels = new List<CfgLevel>();
-	private int _startLevel;
-	private int _maxHealth;
+	private CfgGeneral _generalConfig = null;
 
 	public class InitData : ManagerInitData
 	{
@@ -24,16 +23,11 @@ public class ProgressionManager : IManager
 
 	#region IManager
 
-	public int GetMaxHealth()
+	public CfgGeneral GetGeneralConfig()
 	{
-		return _maxHealth;
+		return _generalConfig;
 	}
-
-	public int GetStartLevel()
-	{
-		return _startLevel;
-	}
-
+		
 	public int GetLevelCount()
 	{
 		return _levels.Count;
@@ -96,9 +90,6 @@ public class ProgressionManager : IManager
 
 	void ParseConfigBundle( ConfigBundle bundle )
 	{
-		_startLevel = bundle.m_startLevel;
-		_maxHealth = bundle.m_maxHealth;
-
 		for( int i=0; i<bundle.m_levels.Count; ++i )
 		{
 			CfgLevel lcfg = bundle.m_levels[i];
@@ -127,6 +118,10 @@ public class ProgressionManager : IManager
 			{
 				_crowdConfigs[ ccfg.m_id ] = ccfg;
 			}
+		}
+		for (int i = 0; i < bundle.m_general.Count; ++i) 
+		{
+			_generalConfig = bundle.m_general [i];
 		}
 	}
 }

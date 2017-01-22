@@ -22,7 +22,6 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 
 	public void UI( AppManager app )
 	{
-		#if UNITY_WEBGL
 		if( _fallbackImage != null )
 		{
 			_fallbackTicker -= Time.deltaTime;
@@ -31,6 +30,8 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 				_fallbackImage.enabled = false;
 			}
 		}
+
+		#if UNITY_WEBGL
 		#else
 		if (_movie != null) 
 		{
@@ -61,6 +62,11 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 
 			mainMovie.Stop ();
 			mainMovie.Play ();
+		}
+		else if( _fallbackImage != null )
+		{
+			_fallbackTicker = _fallbackImageDuration;
+			_fallbackImage.enabled = true;
 		}
 		#endif
 	}

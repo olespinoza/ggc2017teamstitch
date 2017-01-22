@@ -8,6 +8,8 @@ public class CfgGeneral
 	public int m_startLevel = 0;
 	public int m_maxHealth = 10;
 
+	public Texture2D[] m_beatLevelTextures;
+
 	public float m_uiTextFadeTime = 4.5f;
 
 	public float m_loseSavorDelay = 4.5f;

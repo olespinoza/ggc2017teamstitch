@@ -9,6 +9,7 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 	private UnityEngine.UI.RawImage _movie;
 	[SerializeField] private UnityEngine.UI.Image _fallbackImage;
 	[SerializeField] private float _fallbackImageDuration;
+	[SerializeField] private float _playbackSpeed;
 	private float _fallbackTicker=0;
 
 	public void OnLevelChange( AppManager app )
@@ -68,6 +69,7 @@ public class UIHubMovieEffect : MonoBehaviour, IHub
 			Texture main = _movie.material.mainTexture;
 			MovieTexture maskMovie = mask as MovieTexture;
 			MovieTexture mainMovie = main as MovieTexture;
+
 			maskMovie.Stop ();
 			maskMovie.Play ();
 

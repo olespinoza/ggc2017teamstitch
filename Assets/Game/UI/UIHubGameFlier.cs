@@ -17,15 +17,32 @@ public class UIHubGameFlier : MonoBehaviour, IHub
 	[SerializeField] private Stimulus _stimulus;
 	private AudioSource _overrideAudioSource;
 
+	private Sprite _defaultSprite;
+
 	private void Start()
 	{
 		_image = GetComponent<UnityEngine.UI.Image> ();
+		_defaultSprite = _image.sprite;
 		_mainAudioSource = Camera.main.GetComponent<AudioSource> ();
 		_overrideAudioSource = GetComponent<AudioSource> ();
 	}
 
 	public void OnLevelChange( AppManager app )
 	{
+	}
+
+	public void SwapTexture( Texture2D tex )
+	{
+		if (tex == null) 
+		{
+			_image.sprite = _defaultSprite;
+		}
+		else
+		{
+			_image.sprite = Sprite.Create(tex, new Rect (0, 0, tex.width, tex.height), Vector2.zero);
+		}
+		_image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _image.sprite.textureRect.width);
+		_image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _image.sprite.textureRect.height);
 	}
 
 	public void UI( AppManager app )

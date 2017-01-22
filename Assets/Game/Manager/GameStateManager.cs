@@ -158,7 +158,14 @@ public class GameStateManager : IManager
 	{
 		_gameState.m_currentLevel++;
 
-		CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
+		UIHubGameFlier flier = GameObject.Find ("WinSprite").GetComponent<UIHubGameFlier> ();
+		if (_gameState.m_currentLevel == _prog.GetLevelCount () - 1) {
+			flier.SwapTexture (null);
+		} else {
+			flier.SwapTexture (_gameState.m_generalConfig.m_beatLevelTextures[Random.Range(0, _gameState.m_generalConfig.m_beatLevelTextures.Length)]);
+		}
+
+		CfgLevel lcfg = _prog.GetLevelConfigByIndex( _gameState.m_currentLevel);
 
 		AudioSource aSrc = Camera.main.GetComponent<AudioSource> ();
 		aSrc.clip = lcfg.m_music;

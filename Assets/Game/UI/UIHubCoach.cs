@@ -10,12 +10,14 @@ public class UIHubCoach : MonoBehaviour, IHub
 	void Start()
 	{
 		_image = GetComponent<UnityEngine.UI.Image> ();
+		float w = _image.sprite.texture.width;
+		float h = _image.sprite.texture.height;
 		_sprites = new Sprite[4];
 		for (int i = 0; i < 2; ++i)
 		{
 			for (int j = 0; j < 2; ++j)
 			{
-				Rect rect = new Rect (j * UIManager.COACH_WIDTH, (1-i) * UIManager.COACH_HEIGHT, UIManager.COACH_WIDTH, UIManager.COACH_HEIGHT);
+				Rect rect = new Rect (j * w/2, (1-i) * h/2, w/2, h/2);
 				_sprites [i * 2 + j] = Sprite.Create (_image.sprite.texture, rect, Vector2.zero);
 			}
 		}

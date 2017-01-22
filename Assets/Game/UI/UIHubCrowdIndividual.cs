@@ -22,9 +22,11 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		CrowdIndividual model = gameState.m_rows[_row].m_individuals[_seat];
 
 		_sprites = new Sprite[5];
+		float w = model.m_config.m_asset.width;
+		float h = model.m_config.m_asset.height;
 		for (int i = 0; i < 5; ++i) 
 		{
-			Rect texRect = new Rect (i*UIManager.CHARACTER_WIDTH, 0, UIManager.CHARACTER_WIDTH, UIManager.CHARACTER_HEIGHT);
+			Rect texRect = new Rect (i*w/5, 0, w/5, h);
 			_sprites[i] = Sprite.Create (model.m_config.m_asset, texRect, Vector2.zero);
 		}
 		_image.sprite = _sprites[2];

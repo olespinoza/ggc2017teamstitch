@@ -46,4 +46,5 @@ public class CrowdIndividual
 public class CrowdRow
 {
 	public List<CrowdIndividual> m_individuals = new List<CrowdIndividual>();
+	public float m_stagger;
 }

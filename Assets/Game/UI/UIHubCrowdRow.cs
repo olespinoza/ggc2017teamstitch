@@ -24,7 +24,7 @@ public class UIHubCrowdRow : MonoBehaviour, IHub
 			CrowdRow rowState = gameState.m_rows [_rowId];
 
 			float spacing = (UIManager.STADIUM_WIDTH - UIManager.CHARACTER_WIDTH) / (gameState.m_coach.m_slots-1);
-			float stagger = 0.5f * (_rowId % 2);
+			float stagger = rowState.m_stagger * (_rowId % 2);
 
 			float leftTheta = 180.0f - gameState.m_thetaRange / 2;
 			float rightTheta = 180.0f + gameState.m_thetaRange / 2;

@@ -37,7 +37,7 @@ public class CrowdController
 		return result;
 	}
 
-	public static List<CrowdRow> PopulateCrowd( string[] rowConfig, ProgressionManager prog )
+	public static List<CrowdRow> PopulateCrowd( CfgCrowdRow[] rowConfig, ProgressionManager prog )
 	{
 		List<CrowdRow> result = new List<CrowdRow>();
 
@@ -49,22 +49,23 @@ public class CrowdController
 		for(int i = 0; i < rowConfig.Length; ++i)
 		{
 			CrowdRow row = new CrowdRow();
+			row.m_stagger = rowConfig[i].m_stagger;
 
-			string[] seats = rowConfig[i].Split(',');
+			string[] seats = rowConfig[i].m_audience.Split(',');
 
 			for (int j = 0; j < seats.Length; ++j) 
 			{
 				string seatCfg = seats[j].Trim();
-				if (seatCfg != "")
+				if(seatCfg != "")
 				{
-					CrowdIndividual individual = new CrowdIndividual ();
-					CfgCrowdConfig cccfg = prog.GetCrowdConfigById (seatCfg);
-					individual.Setup (cccfg);
-					row.m_individuals.Add (individual);
-				} 
+					CrowdIndividual individual = new CrowdIndividual();
+					CfgCrowdConfig cccfg = prog.GetCrowdConfigById(seatCfg);
+					individual.Setup(cccfg);
+					row.m_individuals.Add(individual);
+				}
 				else
 				{
-					row.m_individuals.Add (null);
+					row.m_individuals.Add(null);
 				}
 			}
 

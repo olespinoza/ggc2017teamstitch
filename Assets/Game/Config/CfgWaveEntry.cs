@@ -10,4 +10,5 @@ public class CfgWaveEntry
 	public float m_initialPeriod = 5.0f;
 	public float m_finalPeriod = 5.0f;
 	public float m_width = 5.0f;
+	public bool m_invert = false;
 }

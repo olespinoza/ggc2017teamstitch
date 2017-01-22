@@ -29,6 +29,8 @@ public class CrowdController
 					{
 						individual.m_waveAmount = amplitude;
 					}
+
+					individual.m_energy -= dt;
 				}
 			}
 		}

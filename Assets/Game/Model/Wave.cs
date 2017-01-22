@@ -15,7 +15,7 @@ public class Wave
 	private bool _kill = false;
 	private int _iterationsLeft = 0;
 
-	public float Theta { get { return _theta; } }
+	public float Theta { get { return _cfg.m_invert ? _theta : 360.0f-_theta; } }
 
 	public Wave( CfgWaveEntry cfg )
 	{
@@ -31,7 +31,7 @@ public class Wave
 
 	public float GetMagnitudeAt( float theta )
 	{
-		float distance = Mathf.Abs( theta - _theta );
+		float distance = Mathf.Abs( theta - Theta );
 		return Mathf.Max( 0, 1.0f - distance / _width );
 	}
 		

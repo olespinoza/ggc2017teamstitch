@@ -13,6 +13,7 @@ public class GameState
 
 	public float m_levelFailedTicker = 0;
 	public float m_levelFinishedTicker = 0;
+	public float m_levelFadeInTicker = 0;
 
 	public int m_health = 0;
 	public int m_maxHealth = 0;

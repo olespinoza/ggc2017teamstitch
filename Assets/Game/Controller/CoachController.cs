@@ -7,9 +7,10 @@ public class CoachController
 	public static void SetupCoach( bool firstLevel, Coach coach, CfgCoach cfg, int slots )
 	{
 		coach.m_cfg = cfg;
+		int oldSlots = coach.m_slots;
 		coach.m_slots = slots;
-		coach.m_slot = slots / 2;
-		coach.m_realPoint = firstLevel ? -5.0f : coach.m_slot;
+		coach.m_slot = Mathf.Max( coach.m_slot, slots -1 );
+		coach.m_realPoint = firstLevel ? -5.0f : ( coach.m_realPoint * (float)slots / (float)oldSlots );
 	}
 
 	public static void UpdateCoach( UIManager ui, GameState gameState, float thetaRange, float finalLevelIndex, float dt )
@@ -52,19 +53,23 @@ public class CoachController
 
 		coach.m_cheer = Mathf.Max(0, coach.m_cheer - dt);
 
-		float moveStep = dt * coach.m_cfg.m_walkSpeed * coach.m_slots;
-		if (Mathf.Abs (coach.m_realPoint - (float)coach.m_slot) < moveStep) 
+		if( !ui.IsSkippingNextFrame )
 		{
-			coach.m_realPoint = coach.m_slot;
-		}
-		else if (coach.m_realPoint > (float)coach.m_slot) 
-		{
-			coach.m_realPoint -= moveStep;
-		} 
-		else if (coach.m_realPoint < (float)coach.m_slot) 
-		{
-			coach.m_realPoint += moveStep;
-		}
+			float moveStep = dt * coach.m_cfg.m_walkSpeed * coach.m_slots;
+		
+			if (Mathf.Abs (coach.m_realPoint - (float)coach.m_slot) < moveStep) 
+			{
+				coach.m_realPoint = coach.m_slot;
+			}
+			else if (coach.m_realPoint > (float)coach.m_slot) 
+			{
+				coach.m_realPoint -= moveStep;
+			} 
+			else if (coach.m_realPoint < (float)coach.m_slot) 
+			{
+				coach.m_realPoint += moveStep;
+			}
+			}
 
 		if (Input.GetKeyDown (KeyCode.Escape)) 
 		{

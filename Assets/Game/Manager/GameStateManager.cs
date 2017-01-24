@@ -49,8 +49,6 @@ public class GameStateManager : IManager
 
 			CfgLevel lcfg = _prog.GetLevelConfigByIndex(_gameState.m_currentLevel);
 
-			CoachController.UpdateCoach( _ui, _gameState, lcfg.m_thetaRange, _prog.GetLevelCount()-1, dt );
-
 			if (_gameState.m_levelFailedTicker <= 0) 
 			{
 				List<Wave> newWaves = WaveController.GetNewWavesForTimeRange (lcfg, oldTime, newTime);
@@ -88,6 +86,12 @@ public class GameStateManager : IManager
 					if (!asrc.isPlaying) asrc.Play ();
 				}
 			}
+			else
+			{
+				AudioSource asrc = GameObject.Find ("CrowdRoar").GetComponent<AudioSource> ();
+				if( asrc.isPlaying ) asrc.Stop ();
+			}
+
 			// update crowd
 			KeyValuePair<int, int> crowdResult = CrowdController.UpdateCrowd(_gameState, dt);
 			_gameState.m_score += crowdResult.Key;
@@ -109,14 +113,26 @@ public class GameStateManager : IManager
 				if (_gameState.m_levelFinishedTicker <= 0) 
 				{
 					_ui.PlayEffect ("Confetti");
+
+					UIHubGameFlier flier = GameObject.Find ("WinSprite").GetComponent<UIHubGameFlier> ();
+
+					if (_gameState.m_currentLevel == _prog.GetLevelCount () - 1) {
+						flier.SwapTexture (null);
+					} else {
+						flier.SwapTexture (_gameState.m_generalConfig.m_beatLevelTextures[Random.Range(0, _gameState.m_generalConfig.m_beatLevelTextures.Length)]);
+					}
 				}
 				_gameState.m_levelFinishedTicker += dt;
 			}
 
-			if (_gameState.m_levelFinishedTicker > _gameState.m_generalConfig.m_winSavorDelay && _gameState.m_currentLevel < _prog.GetLevelCount()-1 )
+			_gameState.m_levelFadeInTicker = Mathf.Max( 0.0f, _gameState.m_levelFadeInTicker - dt );
+
+			if (_gameState.m_levelFinishedTicker > _gameState.m_generalConfig.m_winSavorDelay - _gameState.m_generalConfig.m_levelScrollTime && _gameState.m_currentLevel < _prog.GetLevelCount()-1 )
 			{
 				NextLevel ();
 			}
+
+			CoachController.UpdateCoach( _ui, _gameState, lcfg.m_thetaRange, _prog.GetLevelCount()-1, dt );
 		}
 	}
 	public void UpdateFrameLate( float dt )
@@ -158,13 +174,6 @@ public class GameStateManager : IManager
 	{
 		_gameState.m_currentLevel++;
 
-		UIHubGameFlier flier = GameObject.Find ("WinSprite").GetComponent<UIHubGameFlier> ();
-		if (_gameState.m_currentLevel == _prog.GetLevelCount () - 1) {
-			flier.SwapTexture (null);
-		} else {
-			flier.SwapTexture (_gameState.m_generalConfig.m_beatLevelTextures[Random.Range(0, _gameState.m_generalConfig.m_beatLevelTextures.Length)]);
-		}
-
 		CfgLevel lcfg = _prog.GetLevelConfigByIndex( _gameState.m_currentLevel);
 
 		AudioSource aSrc = Camera.main.GetComponent<AudioSource> ();
@@ -189,5 +198,10 @@ public class GameStateManager : IManager
 		_gameState.m_waveIndex = 0;
 
 		_ui.OnLevelChange();
+
+		if( _gameState.m_currentLevel > 0 )
+		{
+			_gameState.m_levelFadeInTicker = _gameState.m_generalConfig.m_levelScrollTime;
+		}
 	}
 }

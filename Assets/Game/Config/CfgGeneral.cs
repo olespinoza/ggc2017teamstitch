@@ -14,6 +14,7 @@ public class CfgGeneral
 
 	public float m_loseSavorDelay = 4.5f;
 	public float m_winSavorDelay = 4.5f;
+	public float m_levelScrollTime = 1.65f;
 
 	public float m_crowdSagDepth = 32.0f;
 	public float m_crowdWaveHeight = 32.0f;

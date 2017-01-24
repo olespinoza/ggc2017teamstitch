@@ -21,8 +21,8 @@ public class AppManager : BaseAppManager
 	{
 		base.OnSetup( initData );
 
-		_uiManager = AddManager<UIManager>( new UIManager.InitData(this) );
 		_progressionManager = AddManager<ProgressionManager>( new ProgressionManager.InitData(this) );
+		_uiManager = AddManager<UIManager>( new UIManager.InitData(this) );
 		_gameStateManager = AddManager<GameStateManager>( new GameStateManager.InitData(this) );
 
 		_instance = this;

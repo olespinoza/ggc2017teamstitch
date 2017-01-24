@@ -37,6 +37,7 @@ public class UIHubCoach : MonoBehaviour, IHub
 		Coach model = app.GameStateManager.GameState.m_coach;
 		if (model.m_cfg != null) 
 		{
+			_image.enabled = true;
 			RectTransform rt = GetComponent<RectTransform> ();
 
 			float xRange = UIManager.STADIUM_WIDTH - 256;
@@ -68,6 +69,5 @@ public class UIHubCoach : MonoBehaviour, IHub
 		{
 			_image.sprite = _sprites [index];
 		}
-		_image.enabled = true;
 	}
 }

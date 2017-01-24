@@ -8,14 +8,15 @@ public class UIHubCrowdRow : MonoBehaviour, IHub
 	[SerializeField] private int _rowId;
 
 	private List<UIHubCrowdIndividual> _individuals = new List<UIHubCrowdIndividual>();
+	private List<UIHubCrowdIndividual> _oldCrowd = new List<UIHubCrowdIndividual>();
+
+	void Start()
+	{
+	}
 
 	public void OnLevelChange( AppManager app )
 	{
-		for( int i=0; i<_individuals.Count; ++i )
-		{
-			Destroy( _individuals[i].gameObject );
-		}
-
+		_oldCrowd.AddRange( _individuals );
 		_individuals.Clear();
 
 		GameState gameState = app.GameStateManager.GameState;
@@ -45,6 +46,7 @@ public class UIHubCrowdRow : MonoBehaviour, IHub
 					UIHubCrowdIndividual uiHCI = go.GetComponent<UIHubCrowdIndividual> ();
 					uiHCI.Configure (_rowId, i);
 					uiHCI.OnLevelChange (app);
+					uiHCI.x_offset = (gameState.m_currentLevel>0) ? 960.0f : 0.0f;
 					_individuals.Add (uiHCI);
 				}
 			}
@@ -53,8 +55,29 @@ public class UIHubCrowdRow : MonoBehaviour, IHub
 
 	public void UI( AppManager app )
 	{
+		for( int i=0; i<_oldCrowd.Count; ++i )
+		{
+			_oldCrowd[i].x_offset -= (960.0f * Time.deltaTime / app.GameStateManager.GameState.m_generalConfig.m_levelScrollTime);
+			if( _oldCrowd[i].x_offset <= -960.0f )
+			{
+				Destroy( _oldCrowd[i].gameObject );
+				_oldCrowd.RemoveAt(i);
+				--i;
+			}
+			else
+			{
+				_oldCrowd[i].DeadUI( app );
+			}
+		}
+
 		for( int i=0; i<_individuals.Count; ++i )
 		{
+			if( _individuals[i].x_offset > 0 )
+			{
+				_individuals[i].x_offset -= (960.0f * Time.deltaTime / app.GameStateManager.GameState.m_generalConfig.m_levelScrollTime);
+				_individuals[i].x_offset = Mathf.Max( 0.0f, _individuals[i].x_offset );
+			}
+
 			_individuals[i].UI( app );
 		}
 	}

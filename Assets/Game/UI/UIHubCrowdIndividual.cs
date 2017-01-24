@@ -8,6 +8,7 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 	private float _alertOpacity = 0;
 
+	private float _xOrigin;
 	private float _yOrigin;
 	private float _y;
 
@@ -16,12 +17,15 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 	private Sprite[] _sprites = null;
 
+	public float x_offset = 0;
+
 	[SerializeField] private AudioSource _missSound;
 
 	public void Configure( int row, int seat )
 	{
 		_image = GetComponent<UnityEngine.UI.Image>();
 		_yOrigin = _image.rectTransform.localPosition.y;
+		_xOrigin = _image.rectTransform.localPosition.x;
 		_y = _yOrigin;
 		_row = row;
 		_seat = seat;
@@ -75,6 +79,7 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 
 		Vector3 ltp = _image.rectTransform.localPosition;
 		ltp.y = _y;
+		ltp.x = _xOrigin + x_offset;
 		_image.rectTransform.localPosition = ltp;
 
 		_alertOpacity = Mathf.Max (0, _alertOpacity - Time.deltaTime);
@@ -82,6 +87,16 @@ public class UIHubCrowdIndividual : MonoBehaviour, IHub
 		{
 			_alertImage.color = new Color (1, 1, 1, _alertOpacity);
 		}
+	}
+
+	public void DeadUI( AppManager app )
+	{
+		GameState gameState = app.GameStateManager.GameState;
+		Vector3 ltp = _image.rectTransform.localPosition;
+		ltp.x = _xOrigin + x_offset;
+		_image.rectTransform.localPosition = ltp;
+
+		ChangeSprite(2);
 	}
 
 	public void UpdateImage( CrowdIndividual model )

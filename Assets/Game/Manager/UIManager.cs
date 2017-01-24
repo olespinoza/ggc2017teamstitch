@@ -21,6 +21,10 @@ public class UIManager : IManager
 	private AppManager _app = null;
 	private List<IHub> _globalHubs = null;
 
+	private bool _skipNextFrame = false;
+
+	public bool IsSkippingNextFrame { get { return _skipNextFrame; } }
+
 	public class InitData : ManagerInitData
 	{
 		public AppManager m_appManager;
@@ -57,10 +61,14 @@ public class UIManager : IManager
 
 	public void UpdateFrame( float dt )
 	{
-		for( int i=0; i<_globalHubs.Count; ++i )
+		if( !_skipNextFrame )
 		{
-			_globalHubs[i].UI( _app );
+			for( int i=0; i<_globalHubs.Count; ++i )
+			{
+				_globalHubs[i].UI( _app );
+			}
 		}
+		_skipNextFrame = false;
 	}
 	public void UpdateFrameLate( float dt )
 	{
@@ -77,6 +85,7 @@ public class UIManager : IManager
 		{
 			_globalHubs[i].OnLevelChange(_app);
 		}
+		_skipNextFrame = true;
 	}
 
 	public void PlayEffect( string effectId )

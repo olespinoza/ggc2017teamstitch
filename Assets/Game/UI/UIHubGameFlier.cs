@@ -52,24 +52,65 @@ public class UIHubGameFlier : MonoBehaviour, IHub
 		{
 			float fadeTime = gameState.m_generalConfig.m_uiTextFadeTime;
 
+			float transitionTicker = 0.0f;
+			float transitionMax = 0.0f;
 			bool active = false;
+			bool soundCue = false;
 			switch (_stimulus) 
 			{
 			case Stimulus.Lose:
 				active = gameState.m_levelFailedTicker > 0;
+				soundCue = active;
+				transitionTicker = gameState.m_levelFailedTicker;
+				transitionMax = gameState.m_generalConfig.m_loseSavorDelay;
 				break;
 			case Stimulus.Win:
-				active = gameState.m_levelFinishedTicker > 0;
+				active = gameState.m_levelFinishedTicker > 0 || gameState.m_levelFadeInTicker > 0;
+				if( gameState.m_levelFadeInTicker > 0 )
+				{
+					transitionTicker = gameState.m_generalConfig.m_levelScrollTime+gameState.m_levelFadeInTicker;
+					transitionMax = gameState.m_generalConfig.m_levelScrollTime;
+				}
+				else
+				{
+					soundCue = active;
+					transitionTicker = gameState.m_levelFinishedTicker;
+					transitionMax = gameState.m_generalConfig.m_winSavorDelay;
+				}
 				break;
+			}
+
+			// vertical transition
+			Vector3 lp = _image.rectTransform.localPosition;
+			if( transitionTicker < gameState.m_generalConfig.m_levelScrollTime )
+			{
+				float percent = 1.0f - transitionTicker / gameState.m_generalConfig.m_levelScrollTime;
+				lp.x = (percent*percent * 900);
+			}
+			else if( _stimulus == Stimulus.Win && transitionTicker > transitionMax )
+			{				
+				float percent = 1.0f - (transitionTicker-transitionMax) / transitionMax;
+				lp.x = -(percent*percent * 900);
+			}
+			else if( transitionTicker > transitionMax - gameState.m_generalConfig.m_levelScrollTime )
+			{
+				float percent = (transitionTicker - (transitionMax - gameState.m_generalConfig.m_levelScrollTime)) / gameState.m_generalConfig.m_levelScrollTime;
+				lp.x = -(percent*percent * 900);
+			}
+			else
+			{
+				lp.x = 0;
+			}
+			_image.rectTransform.localPosition = lp;
+
+			if (soundCue && !_wasActive && _overrideAudioSource != null) 
+			{
+				_mainAudioSource.Stop ();
+				_overrideAudioSource.Play ();
 			}
 
 			if (active) 
 			{
-				if (!_wasActive && _overrideAudioSource != null) 
-				{
-					_mainAudioSource.Stop ();
-					_overrideAudioSource.Play ();
-				}
 				_fade = Mathf.Clamp01 (_fade + Time.deltaTime * fadeTime);
 				if (_fade != _image.color.a) 
 				{
